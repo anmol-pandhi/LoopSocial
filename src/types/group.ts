@@ -22,4 +22,5 @@ export interface Post {
   comments: number;
   shares: number;
   liked: boolean;
+  topics?: string[];
 }

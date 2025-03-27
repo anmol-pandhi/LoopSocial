@@ -35,10 +35,14 @@ export default function Login() {
 
       if (error) throw error;
 
+      // Store session data and auth status
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userId", data.user?.id || "");
+
       setIsLoading(false);
       navigate("/feed", { replace: true });
     } catch (error: any) {
+      console.error("Login error:", error);
       toast({
         title: "Login failed",
         description:
@@ -101,10 +105,12 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8 sm:py-12">
+      <Card className="w-full max-w-sm sm:max-w-md shadow-lg border-opacity-50">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Loop Social</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl font-bold">
+            Loop Social
+          </CardTitle>
           <CardDescription>
             Connect with professionals and grow your career
           </CardDescription>

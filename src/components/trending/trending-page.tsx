@@ -20,7 +20,7 @@ import {
   Heart,
   Share2,
   Bookmark,
-  Fire,
+  Flame, // Changed from Fire to Flame
   Award,
   Zap,
   Globe,
@@ -172,7 +172,7 @@ export default function TrendingPage() {
             <Tabs defaultValue="trending" className="w-full">
               <TabsList>
                 <TabsTrigger value="trending">
-                  <Fire className="mr-2 h-4 w-4" />
+                  <Flame className="mr-2 h-4 w-4" /> {/* Changed from Fire to Flame */}
                   Trending
                 </TabsTrigger>
                 <TabsTrigger value="topics">
@@ -593,3 +593,4 @@ export default function TrendingPage() {
     </MainLayout>
   );
 }
+

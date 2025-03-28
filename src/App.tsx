@@ -29,8 +29,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     async function checkAuth() {
       try {
         // First check localStorage for faster response
-        const isAuthenticated =
-          localStorage.getItem("isAuthenticated") === "true";
+        const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
         if (!isAuthenticated && location.pathname !== "/login") {
           navigate("/login", { replace: true });
@@ -54,4 +53,40 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error("Auth check failed:", error);
         // Fallback to localStorage check
-        const is
+        const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+        if (!isAuthenticated && location.pathname !== "/login") {
+          navigate("/login", { replace: true });
+        }
+      }
+    }
+
+    checkAuth();
+  }, [navigate, location.pathname]);
+
+  return <>{children}</>;
+}
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <AuthGuard>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/groups" element={<GroupsPage />} />
+          <Route path="/groups/:id" element={<GroupDetail />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/trending" element={<TrendingPage />} />
+          <Route path="/events" element={<EventsPage />} />
+        </Routes>
+      </AuthGuard>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+

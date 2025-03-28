@@ -28,25 +28,60 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      // Validate inputs
+      if (!email || !password) {
+        throw new Error("Please enter both email and password");
+      }
+
+      // Check network connectivity
+      if (!navigator.onLine) {
+        throw new Error("No internet connection. Please check your network.");
+      }
+
+      console.log("Attempting login with Supabase...");
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase auth error:", error);
+        throw error;
+      }
+
+      if (!data.user) {
+        throw new Error("No user data received");
+      }
 
       // Store session data and auth status
       localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("userId", data.user?.id || "");
+      localStorage.setItem("userId", data.user.id);
 
       setIsLoading(false);
       navigate("/feed", { replace: true });
     } catch (error: any) {
-      console.error("Login error:", error);
+      console.error("Login error details:", {
+        message: error.message,
+        name: error.name,
+        code: error.code,
+        stack: error.stack
+      });
+
+      let errorMessage = "Login failed. ";
+      
+      if (error.message?.includes("Failed to fetch")) {
+        errorMessage += "Cannot connect to the server. Please check your internet connection.";
+      } else if (error.message?.includes("Invalid login credentials")) {
+        errorMessage += "Invalid email or password.";
+      } else if (error.message) {
+        errorMessage += error.message;
+      } else {
+        errorMessage += "Please check your credentials and try again.";
+      }
+
       toast({
         title: "Login failed",
-        description:
-          error.message || "Please check your credentials and try again",
+        description: errorMessage,
         variant: "destructive",
       });
       setIsLoading(false);
@@ -208,3 +243,4 @@ export default function Login() {
     </div>
   );
 }
+
